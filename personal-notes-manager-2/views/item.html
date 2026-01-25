@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Item Page</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/search?q=test">Search</a>
+        <a href="/item/1">Item</a>
+        <a href="/contact">Contact</a>
+        <a href="/about">About</a>
+        <a href="/api-test" style="background: #4CAF50; color: white; padding: 5px 10px; border-radius: 4px;">API Test</a>
+    </nav>
+</header>
+
+<section>
+    <p>Item ID:</p>
+    <h2 id="itemId"></h2>
+</section>
+
+<script>
+    const id = window.location.pathname.split("/").pop();
+    document.getElementById("itemId").textContent = id;
+</script>
+
+</body>
+</html>

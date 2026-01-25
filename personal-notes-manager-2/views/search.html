@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Search Result</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/search?q=test">Search</a>
+        <a href="/item/1">Item</a>
+        <a href="/contact">Contact</a>
+        <a href="/about">About</a>
+        <a href="/api-test" style="background: #4CAF50; color: white; padding: 5px 10px; border-radius: 4px;">API Test</a>
+    </nav>
+</header>
+
+<section>
+    <p>Your search query:</p>
+    <h2 id="query"></h2>
+</section>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("query").textContent = params.get("q");
+</script>
+
+</body>
+</html>
