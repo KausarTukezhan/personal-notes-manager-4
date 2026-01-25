@@ -1,17 +1,15 @@
 const { MongoClient } = require('mongodb');
+require('dotenv').config(); // Это позволяет серверу видеть файл .env
 
-
-const uri = 'mongodb://localhost:27017';
+// Теперь адрес базы берется из настроек, а если их нет - из локалки
+const uri = process.env.MONGO_URI || 'mongodb://localhost:27017';
 const dbName = 'notesManager';
 
 let db = null;
 let client = null;
 
-
 async function connectDB() {
-    if (db) {
-        return db;
-    }
+    if (db) return db;
 
     try {
         client = new MongoClient(uri);
@@ -25,14 +23,10 @@ async function connectDB() {
     }
 }
 
-
 function getDB() {
-    if (!db) {
-        throw new Error('Database not connected. Call connectDB() first.');
-    }
+    if (!db) throw new Error('Database not connected. Call connectDB() first.');
     return db;
 }
-
 
 async function closeDB() {
     if (client) {
@@ -43,8 +37,4 @@ async function closeDB() {
     }
 }
 
-module.exports = {
-    connectDB,
-    getDB,
-    closeDB
-};
+module.exports = { connectDB, getDB, closeDB };
