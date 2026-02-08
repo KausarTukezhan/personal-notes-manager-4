@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>Contact Support</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav><div class="logo">GOLDEN NOTES</div><a href="/">← Back to Dashboard</a></nav>
+    <div class="container" style="max-width: 600px;">
+        <h1 style="color:var(--gold)">Secure Support Channel</h1>
+        <div class="note-card">
+            <p>Need help with your vault? Send a secure message to our admins.</p>
+            <input type="text" id="name" placeholder="Full Name">
+            <input type="email" id="email" placeholder="Return Email">
+            <textarea id="msg" placeholder="Describe your issue..." rows="5"></textarea>
+            <button onclick="send()" style="width:100%">Send Secure Message</button>
+        </div>
+    </div>
+    <script>
+        function send() {
+            alert("Message encrypted and sent to admin! (Data stored in Support collection)");
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>About System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav><div class="logo">GOLDEN NOTES</div><a href="/">← Back to Dashboard</a></nav>
+    <div class="container">
+        <h1 style="color:var(--gold)">System Architecture</h1>
+        <div class="notes-grid">
+            <div class="note-card">
+                <h3>🔐 Security Logic</h3>
+                <p>Passwords are hashed using <strong>bcrypt</strong> with 10 salt rounds. No plain-text passwords stored.</p>
+            </div>
+            <div class="note-card">
+                <h3>🍪 Session Management</h3>
+                <p>Using <strong>express-session</strong> with MongoDB store. Cookies are <strong>HttpOnly</strong> to prevent XSS.</p>
+            </div>
+            <div class="note-card">
+                <h3>⚖️ RBAC (Role Control)</h3>
+                <p>Admin has full access to all records. Regular users are authorized to see/edit only their own data.</p>
+            </div>
+            <div class="note-card">
+                <h3>📂 Data Handling</h3>
+                <p>Server-side <strong>Pagination</strong> ensures fast loading even with thousands of records.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
