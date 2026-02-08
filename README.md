@@ -13,12 +13,12 @@
 ---
 ## Key Features
 
-* 🛡️ **Advanced Security**: Industry-standard password hashing using `bcrypt`.
-* 🔑 **Session Management**: Persistent user sessions via `express-session` stored in MongoDB.
-* 👥 **RBAC (Role-Based Access Control)**: Distinct permissions for `user` and `admin` roles.
-* 🚀 **Fluid UX**: SPA architecture with real-time search, pagination, and modal-based navigation.
-* 💾 **Cloud Database**: Fully integrated with MongoDB Atlas for reliable data persistence.
-* 📬 **Support System**: Integrated contact form archiving submissions to `contacts.json`.
+* **Advanced Security**: Industry-standard password hashing using `bcrypt`.
+* **Session Management**: Persistent user sessions via `express-session` stored in MongoDB.
+* **RBAC (Role-Based Access Control)**: Distinct permissions for `user` and `admin` roles.
+* **Fluid UX**: SPA architecture with real-time search, pagination, and modal-based navigation.
+* **Cloud Database**: Fully integrated with MongoDB Atlas for reliable data persistence.
+* **Support System**: Integrated contact form archiving submissions to `contacts.json`.
 
 ---
 
