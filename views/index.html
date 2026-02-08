@@ -33,7 +33,6 @@
 
             <div class="form-box" style="margin-bottom: 40px; background: #0a0a0a;">
                 <input type="text" id="note-title" placeholder=" Record Title " style="font-weight: bold; border: none; background: transparent; border-bottom: 1px solid #222; border-radius: 0; margin-bottom: 15px; color: white;">
-                
                 <textarea id="note-content" placeholder="Type your encrypted thoughts..." rows="3" style="border: none; background: transparent; resize: none; margin-bottom: 15px; color: #ccc; outline: none;"></textarea>
                 
                 <div style="display:flex; justify-content: space-between; align-items: center; border-top: 1px solid #1a1a1a; padding-top: 15px; flex-wrap: wrap; gap: 15px;">
@@ -69,13 +68,7 @@
     <div id="aboutModal" class="modal">
         <div class="modal-content">
             <h2 style="color:var(--gold); margin-top:0;">About GOLDEN NOTES</h2>
-            <p style="color: #ccc; line-height: 1.6;">Welcome to your personal encrypted vault. This application is designed to keep your thoughts and records secure using modern web technologies.</p>
-            <ul style="color: #888; font-size: 0.9rem; text-align: left; margin: 15px 0;">
-                <li>🔒 Secure Password Hashing (Bcrypt)</li>
-                <li>🍪 Session-based Authentication</li>
-                <li>🏷️ Priority & Category Organization</li>
-                <li>📁 Contact data stored in local JSON</li>
-            </ul>
+            <p style="color: #ccc; line-height: 1.6;">Welcome to your personal encrypted vault. Securely managed via Node.js and MongoDB.</p>
             <button onclick="closeAbout()" style="width: 100%; background: #222; color: white;">Understood</button>
         </div>
     </div>
@@ -108,6 +101,7 @@
     <script>
         let isLogin = true;
         let currentPage = 1;
+        let currentNotes = []; // Храним загруженные заметки для быстрого поиска при редактировании
 
         async function check() {
             const res = await fetch('/api/notes/me');
@@ -141,15 +135,16 @@
             const s = document.getElementById('search').value;
             const res = await fetch(`/api/notes?search=${s}&page=${currentPage}`);
             const data = await res.json();
+            currentNotes = data.notes || []; // Сохраняем в переменную
             const list = document.getElementById('notes-list');
 
-            if (!data.notes || data.notes.length === 0) {
+            if (currentNotes.length === 0) {
                 list.innerHTML = "<p style='grid-column: 1/-1; text-align:center; opacity:0.5;'>No records found.</p>";
                 document.getElementById('pagination').innerHTML = '';
                 return;
             }
 
-            list.innerHTML = data.notes.map(n => `
+            list.innerHTML = currentNotes.map(n => `
                 <div class="note-card">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <span class="priority-tag p-${n.priority || 'Normal'}">${n.priority || 'Normal'}</span>
@@ -162,7 +157,7 @@
                         <span>${new Date(n.createdAt).toLocaleDateString()}</span>
                     </div>
                     <div style="display: flex; gap: 15px; margin-top: 15px; border-top: 1px solid #1a1a1a; padding-top: 15px;">
-                        <span onclick="openEdit('${n._id}','${n.title}','${n.content}')" style="color:var(--gold); font-size:0.7rem; cursor:pointer; font-weight:bold; letter-spacing:1px;">EDIT</span>
+                        <span onclick="prepareEdit('${n._id}')" style="color:var(--gold); font-size:0.7rem; cursor:pointer; font-weight:bold; letter-spacing:1px;">EDIT</span>
                         <span onclick="delNote('${n._id}')" style="color:#444; font-size:0.7rem; cursor:pointer; font-weight:bold; letter-spacing:1px;">DELETE</span>
                     </div>
                 </div>
@@ -178,6 +173,7 @@
                 pg.innerHTML += `<button onclick="goToPage(${i})" class="pg-btn ${i===currentPage?'active':''}">${i}</button>`;
             }
         }
+
         function goToPage(p) { currentPage = p; loadNotes(); window.scrollTo(0,0); }
 
         async function saveNote() {
@@ -186,12 +182,8 @@
             const priority = document.getElementById('note-priority').value;
             const category = document.getElementById('note-category').value;
         
-            if (title.length < 3) {
-                return alert("Please enter a title (minimum 3 characters)");
-            }
-            if (content.length === 0) {
-                return alert("Note content cannot be empty!");
-            }
+            if (title.length < 3) return alert("Title too short");
+            if (!content) return alert("Content empty");
         
             const res = await fetch('/api/notes', {
                 method: 'POST',
@@ -203,88 +195,71 @@
                 document.getElementById('note-title').value=''; 
                 document.getElementById('note-content').value=''; 
                 loadNotes(); 
-            } else { 
-                const err = await res.json(); 
-                alert(err.error); 
             }
         }
 
+       
+        function prepareEdit(id) {
+            const note = currentNotes.find(n => n._id === id);
+            if (note) {
+                document.getElementById('edit-id').value = note._id;
+                document.getElementById('edit-title').value = note.title;
+                document.getElementById('edit-content').value = note.content;
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        async function updateNote() {
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('edit-title').value;
+            const content = document.getElementById('edit-content').value;
+
+            const res = await fetch(`/api/notes/${id}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ title, content })
+            });
+
+            if(res.ok) {
+                closeEdit();
+                loadNotes();
+            } else {
+                alert("Failed to update");
+            }
+        }
+        
         function openAbout() { document.getElementById('aboutModal').style.display = 'block'; }
         function closeAbout() { document.getElementById('aboutModal').style.display = 'none'; }
-
         function openContact() { document.getElementById('contactModal').style.display = 'block'; }
         function closeContact() { document.getElementById('contactModal').style.display = 'none'; }
-        
+        function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
+
         async function sendContact() {
             const email = document.getElementById('c-email').value;
             const message = document.getElementById('c-message').value;
-            if(!email || !message) return alert("Please fill all fields");
-
-            try {
-                const res = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, message })
-                });
-                if (res.ok) {
-                    alert("Message saved to data/contacts.json!");
-                    closeContact();
-                    document.getElementById('c-email').value = '';
-                    document.getElementById('c-message').value = '';
-                } else {
-                    const errorContent = await res.json();
-                    alert("Server Error: " + errorContent.error);
-                }
-            } catch (err) {
-                alert("Network error, check your server console.");
-            }
-        }
-
-        function openEdit(id, t, c) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-title').value = t;
-            document.getElementById('edit-content').value = c;
-            document.getElementById('editModal').style.display = 'block';
-        }
-        function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
-        
-        async function updateNote() {
-            await fetch(`/api/notes/${document.getElementById('edit-id').value}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ 
-                    title: document.getElementById('edit-title').value, 
-                    content: document.getElementById('edit-content').value 
-                })
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, message })
             });
-            closeEdit(); loadNotes();
+            if (res.ok) {
+                alert("Sent!");
+                closeContact();
+            }
         }
 
         async function handleAuth() {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('pass').value;
-        
-            // Простая проверка перед отправкой на сервер
-            if (!email.includes('@')) {
-                return alert("Please enter a valid email");
-            }
-            if (pass.length < 6) {
-                return alert("Password is too short");
-            }
-        
             const res = await fetch(`/api/auth/${isLogin ? 'login' : 'register'}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password: pass })
             });
-        
-            const data = await res.json();
-            if (res.ok) {
-                location.reload();
-            } else {
-                alert(data.error);
-            }
+            if (res.ok) location.reload();
+            else alert("Auth failed");
         }
+
         function setAuthMode(v) { 
             isLogin = v; 
             document.getElementById('t-login').style.color = v ? 'var(--gold)' : '#444';
@@ -292,7 +267,7 @@
             document.getElementById('auth-btn').innerText = v ? 'SIGN IN' : 'REGISTER';
         }
 
-        async function delNote(id) { if(confirm('Delete this record?')) { await fetch(`/api/notes/${id}`, {method:'DELETE'}); loadNotes(); } }
+        async function delNote(id) { if(confirm('Delete?')) { await fetch(`/api/notes/${id}`, {method:'DELETE'}); loadNotes(); } }
         async function logout() { await fetch('/api/auth/logout'); location.reload(); }
         
         check();
