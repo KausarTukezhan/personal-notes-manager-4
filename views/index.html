@@ -65,14 +65,6 @@
         </div>
     </div>
 
-    <div id="aboutModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color:var(--gold); margin-top:0;">About GOLDEN NOTES</h2>
-            <p style="color: #ccc; line-height: 1.6;">Welcome to your personal encrypted vault. Securely managed via Node.js and MongoDB.</p>
-            <button onclick="closeAbout()" style="width: 100%; background: #222; color: white;">Understood</button>
-        </div>
-    </div>
-
     <div id="editModal" class="modal">
         <div class="modal-content">
             <h2 style="color:var(--gold); margin-top:0;">Update Record</h2>
@@ -101,8 +93,9 @@
     <script>
         let isLogin = true;
         let currentPage = 1;
-        let currentNotes = []; // Храним загруженные заметки для быстрого поиска при редактировании
+        let currentNotes = []; 
 
+        // Проверка авторизации при загрузке
         async function check() {
             const res = await fetch('/api/notes/me');
             if (res.ok) {
@@ -131,11 +124,12 @@
             }
         }
 
+        // Загрузка заметок
         async function loadNotes() {
             const s = document.getElementById('search').value;
             const res = await fetch(`/api/notes?search=${s}&page=${currentPage}`);
             const data = await res.json();
-            currentNotes = data.notes || []; // Сохраняем в переменную
+            currentNotes = data.notes || []; 
             const list = document.getElementById('notes-list');
 
             if (currentNotes.length === 0) {
@@ -198,7 +192,6 @@
             }
         }
 
-       
         function prepareEdit(id) {
             const note = currentNotes.find(n => n._id === id);
             if (note) {
@@ -223,13 +216,9 @@
             if(res.ok) {
                 closeEdit();
                 loadNotes();
-            } else {
-                alert("Failed to update");
             }
         }
         
-        function openAbout() { document.getElementById('aboutModal').style.display = 'block'; }
-        function closeAbout() { document.getElementById('aboutModal').style.display = 'none'; }
         function openContact() { document.getElementById('contactModal').style.display = 'block'; }
         function closeContact() { document.getElementById('contactModal').style.display = 'none'; }
         function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
@@ -245,6 +234,8 @@
             if (res.ok) {
                 alert("Sent!");
                 closeContact();
+                document.getElementById('c-email').value = '';
+                document.getElementById('c-message').value = '';
             }
         }
 
