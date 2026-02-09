@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>About System</title>
+    <meta charset="UTF-8">
+    <title>About | GOLDEN NOTES</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <nav><div class="logo">GOLDEN NOTES</div><a href="/">← Back to Dashboard</a></nav>
-    <div class="container">
-        <h1 style="color:var(--gold)">System Architecture</h1>
-        <div class="notes-grid">
-            <div class="note-card">
-                <h3>🔐 Security Logic</h3>
-                <p>Passwords are hashed using <strong>bcrypt</strong> with 10 salt rounds. No plain-text passwords stored.</p>
-            </div>
-            <div class="note-card">
-                <h3>🍪 Session Management</h3>
-                <p>Using <strong>express-session</strong> with MongoDB store. Cookies are <strong>HttpOnly</strong> to prevent XSS.</p>
-            </div>
-            <div class="note-card">
-                <h3>⚖️ RBAC (Role Control)</h3>
-                <p>Admin has full access to all records. Regular users are authorized to see/edit only their own data.</p>
-            </div>
-            <div class="note-card">
-                <h3>📂 Data Handling</h3>
-                <p>Server-side <strong>Pagination</strong> ensures fast loading even with thousands of records.</p>
-            </div>
+    <nav>
+        <div class="logo">GOLDEN NOTES</div>
+        <div id="nav-links">
+            <a href="/" class="nav-item">Back to App</a>
+        </div>
+    </nav>
+    <div class="container" style="margin-top: 100px; text-align: center;">
+        <div class="form-box">
+            <h1 style="color: var(--gold);">About Project</h1>
+            <p>This is a Multi-Page Application (MPA) demo.</p>
+            <p>Current Route: <strong>/about</strong></p>
+            <br>
+            <a href="/" style="color: var(--gold); text-decoration: none;">← Return to Main Page</a>
         </div>
     </div>
 </body>

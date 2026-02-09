@@ -10,7 +10,7 @@
     <nav>
         <div class="logo">GOLDEN NOTES</div>
         <div id="nav-links">
-            <a href="#" class="nav-item" onclick="openAbout()">About</a>
+            <a href="/about" class="nav-item">About</a>
             <a href="#" class="nav-item" onclick="openContact()">Support</a>
         </div>
     </nav>
@@ -114,7 +114,7 @@
                 const roleColor = user.role === 'admin' ? '#ff4d4d' : 'var(--gold)';
                 
                 document.getElementById('nav-links').innerHTML = `
-                    <a href="#" class="nav-item" onclick="openAbout()">About</a>
+                    <a href="/about" class="nav-item">About</a>
                     <a href="#" class="nav-item" onclick="openContact()">Support</a>
                     <div class="user-profile-wrapper">
                         <span class="role-badge-text" style="color: ${roleColor}">${user.role}</span>

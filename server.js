@@ -30,6 +30,9 @@ app.use(session({
 }));
 
 app.use('/api/notes', require('./routes/notes'));
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/about.html'));
+});
 app.use('/api/auth', require('./routes/auth'));
 
 app.post('/api/contact', (req, res) => {

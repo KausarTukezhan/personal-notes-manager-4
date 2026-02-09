@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
             req.session.role = user.role;
             req.session.email = user.email;
             
-            // Важно для сессий: сохраняем сессию принудительно перед ответом
+            // сохраняем сессию принудительно перед ответом
             return req.session.save(() => {
                 res.json({ message: "Welcome" });
             });
